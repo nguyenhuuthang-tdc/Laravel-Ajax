@@ -43,4 +43,11 @@ class PageController extends Controller
         $game = $query->get();     
         return response()->json(array('game'=> $game), 200);
     }
+    public function getDetailByAjax(Request $request) {
+        $game_id = $request->game_id;
+        $detail_game = Game::join('categories','games.cate_id','=','categories.cate_id')
+        ->join('brands','games.brand_id','=','brands.brand_id')
+        ->where('games.game_id','=',$game_id)->get();
+        return response()->json(array('detail_game' => $detail_game), 200);
+    }
 }

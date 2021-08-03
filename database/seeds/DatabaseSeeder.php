@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserSeeder::class);
         $this->call(Category::class);
+        $this->call(Brand::class);
         $this->call(Player::class);
         $this->call(Game::class);
         $this->call(Player_Game::class);
@@ -22,9 +23,19 @@ class DatabaseSeeder extends Seeder
 class Category extends Seeder {
     public function run() {
         DB::table('categories')->insert([
-            ['cate_id'=>1,'name'=>'Survival'],
-            ['cate_id'=>2,'name'=>'Tactic'],
-            ['cate_id'=>3,'name'=>'Action']
+            ['cate_name'=>'Survival'],
+            ['cate_name'=>'Tactic'],
+            ['cate_name'=>'Action']
+        ]);
+    }
+}
+//class brand
+class Brand extends Seeder {
+    public function run() {
+        DB::table('brands')->insert([
+            ['brand_name'=>'Riot Game'],
+            ['brand_name'=>'Tencent'],
+            ['brand_name'=>'Garena']
         ]);
     }
 }
@@ -45,10 +56,10 @@ class Player extends Seeder {
 class Game extends Seeder {
     public function run() {
         DB::table('games')->insert([
-            ['cate_id'=>1,'game_name'=>'Call of Duty','description'=>'2020 World Champs Gaming Warzone','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-1.png'],
-            ['cate_id'=>2,'game_name'=>'Garena of Vallor','description'=>'2023 World Champs Gaming Warzone','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-2.png'],
-            ['cate_id'=>3,'game_name'=>'CSGO','description'=>'2019 World Champs Gaming Warzone','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-3.png'],
-            ['cate_id'=>1,'game_name'=>'Free Fire','description'=>'2017 World Champs Gaming Warzone','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/player-pic-3.png']
+            ['cate_id'=>1,'brand_id'=>1,'game_name'=>'Call of Duty','description'=>'2020 World Champs Gaming Warzone','game_des'=>'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.','dow_quantity'=>12000000,'origin_page'=>'https://www.callofduty.com/','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-1.png'],
+            ['cate_id'=>2,'brand_id'=>2,'game_name'=>'Garena of Vallor','description'=>'2023 World Champs Gaming Warzone','game_des'=>'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.','dow_quantity'=>2400000,'origin_page'=>'https://lienquan.garena.vn/','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-2.png'],
+            ['cate_id'=>3,'brand_id'=>3,'game_name'=>'CSGO','description'=>'2019 World Champs Gaming Warzone','game_des'=>'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.','dow_quantity'=>12000000,'origin_page'=>'https://blog.counter-strike.net/','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/card-pic-3.png'],
+            ['cate_id'=>1,'brand_id'=>2,'game_name'=>'Free Fire','description'=>'2017 World Champs Gaming Warzone','game_des'=>'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.','dow_quantity'=>18600000,'origin_page'=>'https://ff.garena.vn/','game_image'=>'https://ui8-unity-gaming.herokuapp.com/img/player-pic-3.png']
         ]);
     }
 }

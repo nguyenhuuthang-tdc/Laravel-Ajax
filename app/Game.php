@@ -9,7 +9,10 @@ class Game extends Model
     protected $table = 'games';
     //
     public function category() {
-        return $this->belongsTo('App\categories','cate_id','cate_id');
+        return $this->belongsTo('App\Category','cate_id','cate_id');
+    }
+    public function brand() {
+        return $this->belongsTo('App\Brand','brand_id','brand_id');
     }
     //
     public function player() {

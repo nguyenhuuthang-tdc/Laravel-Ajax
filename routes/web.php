@@ -21,3 +21,7 @@ Route::get('cate-product',[
     'as' => 'cate_product',
     'uses' => 'PageController@getProductByAjax'
 ]);
+Route::get('detail',[
+    'as' => 'detail',
+    'uses' => 'PageController@getDetailByAjax'
+]);
