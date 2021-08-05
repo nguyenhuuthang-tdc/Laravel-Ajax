@@ -25,3 +25,11 @@ Route::get('detail',[
     'as' => 'detail',
     'uses' => 'PageController@getDetailByAjax'
 ]);
+Route::get('detail-page',[
+    'as' => 'detail_page',
+    'uses' => 'PageController@getDetail'
+]);
+Route::get('search',[
+    'as' => 'search',
+    'uses' => 'PageController@getResultByAjax'
+]);

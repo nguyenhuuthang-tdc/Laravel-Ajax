@@ -41,7 +41,9 @@
         </div>
         <div class="nav-search">
             <ion-icon class="glass" name="search-outline"></ion-icon>
-            <input type="text" placeholder="Search Everything">
+            <input type="text" placeholder="Search Everything" class="input">
+            <div class="box-result">
+            </div>
         </div>
         <div class="nav-user-manager">
             <div class="user-add">
@@ -137,6 +139,8 @@
     let exitBtn = document.querySelector(".exit-button");
     let detail_screen = document.querySelector(".detail-background");
     let cards = document.querySelectorAll(".card");
+    let inputField = document.querySelector(".input");
+    let box_result = document.querySelector(".box-result");
     let checkCate = [];
     //exit detai-screen
     function closeScreen() {
@@ -247,6 +251,48 @@
                     <a class="links" href="${ detail_game[0].origin_page }">Go to origin page</a>
                 </div>`;
                 detail_screen.innerHTML = box;
+            },
+        })
+    }
+    //search
+    inputField.addEventListener('keyup',function() {
+        let key = inputField.value;
+        if(key !== "") {
+            box_result.style.display = "flex";
+            getResultByKey(key)
+        }
+        else {
+            box_result.style.display = "none";
+        }        
+    })
+    async function getResultByKey(key) {
+        let url = "{{ route('search') }}";
+        $.ajax({
+            url: url,
+            data: {key: key},
+            type: "get",
+            success: function(response) {
+                const result = response.result;
+                var element = ''
+                for(let i = 0; i < result.length; i++) {
+                    let keyRegex = new RegExp(key,"gi")
+                    let name = result[i].game_name.replace(keyRegex, `<b>${ key }</b>`)
+                    element += `
+                    <div class="element-result">
+                        <div class="result-image">
+                            <img src="${result[i].game_image}" alt="">
+                        </div>
+                        <div class="result-content">
+                            <div class="result-name">
+                                <p>${ name }</p>
+                            </div>
+                            <div class="result-dow">
+                                <p>${ result[i].dow_quantity } <ion-icon name="download-outline"></ion-icon></p>
+                            </div>
+                        </div>
+                    </div>`
+                }
+                box_result.innerHTML = element;
             },
         })
     }

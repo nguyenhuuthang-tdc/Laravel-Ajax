@@ -50,4 +50,14 @@ class PageController extends Controller
         ->where('games.game_id','=',$game_id)->get();
         return response()->json(array('detail_game' => $detail_game), 200);
     }
+    //
+    public function getDetail() {
+        return view('detail');
+    }
+    //
+    public function getResultByAjax(Request $request) {
+        $key = $request->key;
+        $result = Game::where('game_name','like','%' . $key . '%')->get();
+        return response()->json(array('result' => $result), 200);
+    }
 }
