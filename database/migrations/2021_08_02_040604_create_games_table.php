@@ -25,6 +25,7 @@ class CreateGamesTable extends Migration
             $table->integer('dow_quantity');
             $table->string('origin_page');
             $table->string('game_image');
+            $table->integer('price');
         });
     }
 

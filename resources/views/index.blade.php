@@ -1,3 +1,6 @@
+<?php 
+    $cart = session()->has('cart') ? session()->get('cart') : null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,15 +49,47 @@
             </div>
         </div>
         <div class="nav-user-manager">
-            <div class="user-add">
-                <ion-icon class="add" name="add-circle-outline"></ion-icon>
+            <div class="user-cart" onclick="navMenu()">
+                <ion-icon class="cart" name="cart-outline"></ion-icon>
+                <p class="quantity">{{ ($cart == null ) ? 0 : count($cart) }}</p>
             </div>
             <div class="user-noti">
                 <ion-icon class="noti" name="notifications-outline"></ion-icon>
             </div>
             <div class="user-image">
                 <img src="https://ui8-unity-gaming.herokuapp.com/img/avatar.png" alt="">
-            </div>            
+            </div>    
+            <div class="small-cart">            
+                <div class="element-field">
+                    @if($cart != null)
+                    @foreach($cart as $item)
+                    <div class="element-cart">
+                        <div class="cart-image">
+                            <img src="{{ $item['image'] }}" alt="">
+                        </div>
+                        <div class="element-content">
+                            <div class="cart-name">
+                                <p>{{ $item['name'] }}</p>
+                            </div>
+                            <div class="cart-price">
+                                <p>{{ $item['price'] }} Đ</p>
+                            </div>
+                        </div>
+                        <div class="delete-cart">Delete</div>
+                    </div>
+                    @endforeach
+                    @else
+                    <p>Your cart is empty</p>
+                    @endif
+                </div>
+                <div class="cart-footer">
+                    <div class="grand-price">
+                        <p><b>Grand price</b> : 12.000.000 USD</p>
+                    </div>
+                    <a href="" class="action view">View cart</a>
+                    <a href="" class="action">Place order</a>
+                </div>                             
+            </div>        
         </div>
     </div>
     <div class="card-container">
@@ -82,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="cart-footer">
+                <div class="card-footer">
                     @if($item->live != 0)
                     <div class="card-live">
                         <ion-icon class="wifi" name="wifi"></ion-icon>
@@ -128,6 +163,7 @@
             <div class="description">
                 <p></p>
             </div>
+            <a class="add-cart" href="#">Add to cart</a>
             <a class="links" href="">Go to origin page</a>
         </div>
     </div>
@@ -141,7 +177,32 @@
     let cards = document.querySelectorAll(".card");
     let inputField = document.querySelector(".input");
     let box_result = document.querySelector(".box-result");
+    let cart_btn = document.querySelector("user-cart");
+    let small_cart = document.querySelector(".small-cart");
+    let element_field = document.querySelector(".element-field");
+    let quantity = document.querySelector(".quantity");
     let checkCate = [];
+    //add to cart
+    function addCart(game_id) {
+        let url = "{{ route('addCart') }}"
+        $.ajax({
+            url: url,
+            data: {game_id: game_id},
+            type: "get",
+            success: function(response) {
+                // let total = response.total;
+                let result = response.result
+                let total = response.total
+                let message = response.message
+                element_field.innerHTML = result
+                quantity.innerHTML = total
+            }
+        });
+    }
+    //cart click 
+    function navMenu() {
+        small_cart.classList.toggle('active');
+    }
     //exit detai-screen
     function closeScreen() {
         detail_screen.style.display = "none";
@@ -248,6 +309,7 @@
                     <div class="description">
                         <p>${ detail_game[0].game_des }</p>
                     </div>
+                    <a class="add-cart" href="#" onclick="addCart(${ detail_game[0].game_id })">Add to cart</a>
                     <a class="links" href="${ detail_game[0].origin_page }">Go to origin page</a>
                 </div>`;
                 detail_screen.innerHTML = box;

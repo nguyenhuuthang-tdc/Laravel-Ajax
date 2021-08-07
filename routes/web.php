@@ -33,3 +33,7 @@ Route::get('search',[
     'as' => 'search',
     'uses' => 'PageController@getResultByAjax'
 ]);
+Route::get('add-cart',[
+    'as' => 'addCart',
+    'uses' => 'CartController@addCart'
+]);
