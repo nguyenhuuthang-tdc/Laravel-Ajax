@@ -14,6 +14,14 @@
     <title>Flex Layout</title>
 </head>
 <body>
+    <div class="alert">
+        <div class="alert-content">
+            <p>Add cart successfully !!!</p>
+        </div>
+        <div class="alert-icon">
+            <ion-icon class="icon success" name="checkmark-circle"></ion-icon>
+        </div>
+    </div>
     <div class="menu-left">
         <div class="container">
             <div class="logo">
@@ -59,36 +67,8 @@
             <div class="user-image">
                 <img src="https://ui8-unity-gaming.herokuapp.com/img/avatar.png" alt="">
             </div>    
-            <div class="small-cart">            
-                <div class="element-field">
-                    @if($cart != null)
-                    @foreach($cart as $item)
-                    <div class="element-cart">
-                        <div class="cart-image">
-                            <img src="{{ $item['image'] }}" alt="">
-                        </div>
-                        <div class="element-content">
-                            <div class="cart-name">
-                                <p>{{ $item['name'] }}</p>
-                            </div>
-                            <div class="cart-price">
-                                <p>{{ $item['price'] }} Đ</p>
-                            </div>
-                        </div>
-                        <div class="delete-cart">Delete</div>
-                    </div>
-                    @endforeach
-                    @else
-                    <p>Your cart is empty</p>
-                    @endif
-                </div>
-                <div class="cart-footer">
-                    <div class="grand-price">
-                        <p><b>Grand price</b> : 12.000.000 USD</p>
-                    </div>
-                    <a href="" class="action view">View cart</a>
-                    <a href="" class="action">Place order</a>
-                </div>                             
+            <div class="small-cart">  
+            @include('small-cart')                                                      
             </div>        
         </div>
     </div>
@@ -140,31 +120,6 @@
     </div>
     <div class="detail-background">
         <div class="detail-box">
-            <div class="exit-button"><span>X</span></div>
-            <div class="detail-game">
-                <div class="game-image">
-                    <img src="" alt="">
-                </div>  
-                <div class="game-info">
-                    <div class="name">
-                        <p></p>
-                    </div>
-                    <div class="category-name">
-                        <p></p>
-                    </div>
-                    <div class="brand-name">
-                        <p></p>
-                    </div>
-                    <div class="download">
-                    <p></p><ion-icon name="download-outline"></ion-icon>
-                    </div>
-                </div>            
-            </div>  
-            <div class="description">
-                <p></p>
-            </div>
-            <a class="add-cart" href="#">Add to cart</a>
-            <a class="links" href="">Go to origin page</a>
         </div>
     </div>
 </body>
@@ -181,7 +136,23 @@
     let small_cart = document.querySelector(".small-cart");
     let element_field = document.querySelector(".element-field");
     let quantity = document.querySelector(".quantity");
+    let alert = document.querySelector(".alert");
+    let alert_content = document.querySelector(".alert-content");
+    let icon = document.querySelector(".icon");
+    let grand = document.querySelector(".grand");
     let checkCate = [];
+    //display alert
+    function displayAlert() {
+        alert.style.transform = "translateX(0px)";       
+        alert.style.opacity = "1"; 
+        alert.style.visibility = "visible";
+    }
+    //clear alert
+    function clearAlert() {
+        alert.style.transform = "translateX(315px)";        
+        alert.style.opacity = "0"; 
+        alert.style.visibility = "hidden";
+    }
     //add to cart
     function addCart(game_id) {
         let url = "{{ route('addCart') }}"
@@ -190,26 +161,73 @@
             data: {game_id: game_id},
             type: "get",
             success: function(response) {
-                // let total = response.total;
                 let result = response.result
                 let total = response.total
                 let message = response.message
-                element_field.innerHTML = result
-                quantity.innerHTML = total
+                let grand_price = response.grand_price
+                console.log(response.code)
+                //alert
+                //
+                if(typeof result != "undefined") {
+                    icon.setAttribute('name','checkmark-circle');
+                    icon.classList.remove('failed');
+                    icon.classList.add('success');
+                    element_field.innerHTML = result
+                    alert_content.innerHTML = message
+                    grand.innerHTML = grand_price; 
+                    quantity.innerHTML = total
+                    setTimeout(displayAlert,0);
+                    setTimeout(clearAlert,5000);
+                }      
+                else {         
+                    icon.setAttribute('name','close-circle');
+                    icon.classList.remove('success');
+                    icon.classList.add('failed');
+                    alert_content.innerHTML = message
+                    setTimeout(displayAlert,0);
+                    setTimeout(clearAlert,5000);
+                }         
             }
         });
     }
+    //foreach delete    
+    function deleteCart(game_id) {
+        let url = "{{ route('deleteCart') }}"
+        $.ajax({
+            url: url,
+            data: {game_id: game_id},
+            type: "get",
+            success: function(response) {
+                let result = response.result
+                let total = response.total
+                let message = response.message
+                let grand_price = response.grand_price
+                //
+                icon.setAttribute('name','checkmark-circle');
+                icon.classList.remove('failed');
+                icon.classList.add('success');
+                element_field.innerHTML = result
+                alert_content.innerHTML = message
+                grand.innerHTML = grand_price; 
+                quantity.innerHTML = total
+                setTimeout(displayAlert,0);
+                setTimeout(clearAlert,5000);            
+            }
+        });
+    }    
     //cart click 
     function navMenu() {
         small_cart.classList.toggle('active');
     }
     //exit detai-screen
-    function closeScreen() {
-        detail_screen.style.display = "none";
+    function closeDetail() {
+        detail_screen.style.opacity = "0";
+        detail_screen.style.visibility = "hidden";
     }
     //open detail-screen 
     function openDetail(game_id){
-        detail_screen.style.display = "flex";
+        detail_screen.style.opacity = "1";
+        detail_screen.style.visibility = "visible";
         getDetailByGameId(game_id);
     }
     //check
@@ -259,7 +277,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="cart-footer">
+                        <div class="card-footer">
                             <div class="card-live">
                                 <ion-icon class="wifi" name="wifi"></ion-icon>
                                 <p>Live</p>
@@ -286,7 +304,7 @@
                 const detail_game = response.detail_game;
                 let box = `
                 <div class="detail-box">
-                    <div class="exit-button" onclick="closeScreen()"><span>X</span></div>
+                    <div class="exit-button" onclick="closeDetail()"><span>X</span></div>
                     <div class="detail-game">
                         <div class="game-image">
                             <img src="${ detail_game[0].game_image }" alt="">
