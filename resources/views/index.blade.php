@@ -165,7 +165,6 @@
                 let total = response.total
                 let message = response.message
                 let grand_price = response.grand_price
-                console.log(response.code)
                 //alert
                 //
                 if(typeof result != "undefined") {
